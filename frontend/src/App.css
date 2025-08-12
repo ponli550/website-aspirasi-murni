@@ -1,0 +1,107 @@
+/* App.css */
+
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Page container */
+.page-container {
+  padding: 24px;
+}
+
+/* Page header */
+.page-header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Card styles */
+.dashboard-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Form styles */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Table styles */
+.table-container {
+  margin-top: 16px;
+}
+
+/* Chart container */
+.chart-container {
+  height: 300px;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* Student payment summary */
+.student-payment-summary {
+  margin-top: 24px;
+}
+
+/* Report styles */
+.report-container {
+  margin-top: 24px;
+}
+
+.report-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.report-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .page-container {
+    padding: 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .report-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
