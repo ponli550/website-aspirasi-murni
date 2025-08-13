@@ -492,17 +492,18 @@ router.get('/:id', getPayment, (req, res) => {
 router.post('/', async (req, res) => {
   // Check if student exists
   try {
-    const student = await Student.findById(req.body.student);
+    const studentId = req.body.student || req.body.studentId;
+    const student = await Student.findById(studentId);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
     const paymentDate = req.body.paymentDate ? new Date(req.body.paymentDate) : new Date();
-    const month = paymentDate.toLocaleString('default', { month: 'long' });
+    const month = paymentDate.getMonth() + 1; // getMonth() returns 0-11, so add 1 for 1-12
     const year = paymentDate.getFullYear();
 
     const payment = new Payment({
-      studentId: req.body.studentId,
+      studentId: studentId,
       amount: req.body.amount,
       paymentMethod: req.body.paymentMethod,
       paymentDate: paymentDate,
