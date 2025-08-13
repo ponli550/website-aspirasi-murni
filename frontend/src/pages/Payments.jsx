@@ -52,7 +52,7 @@ const Payments = () => {
   const [formData, setFormData] = useState({
     student: '',
     amount: '',
-    paymentMethod: 'Cash',
+    paymentMethod: 'cash',
     paymentDate: new Date(),
     description: '',
     receiptNumber: ''
@@ -121,7 +121,7 @@ const Payments = () => {
       setFormData({
         student: '',
         amount: '',
-        paymentMethod: 'Cash',
+        paymentMethod: 'cash',
         paymentDate: new Date(),
         description: 'yuran',
         receiptNumber: generateReceiptNumber()
@@ -550,12 +550,10 @@ const Payments = () => {
                     label="Payment Method"
                     onChange={handleInputChange}
                   >
-                    <MenuItem value="Cash">Cash</MenuItem>
-                    <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
-                    <MenuItem value="Credit Card">Credit Card</MenuItem>
-                    <MenuItem value="Debit Card">Debit Card</MenuItem>
-                    <MenuItem value="Online Payment">Online Payment</MenuItem>
-                    <MenuItem value="Other">Other</MenuItem>
+                    <MenuItem value="cash">Cash</MenuItem>
+                    <MenuItem value="bank_transfer">Bank Transfer</MenuItem>
+                    <MenuItem value="online">Online Payment</MenuItem>
+                    <MenuItem value="cheque">Cheque</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
