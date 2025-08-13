@@ -106,7 +106,7 @@ const Dashboard = () => {
       </Typography>
 
       {/* Summary Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={3} sx={{ mb: 4 }} key="summary-cards-container">
         <Grid item xs={12} sm={6} md={3} key="total-students-card">
           <Card>
             <CardContent>
@@ -242,7 +242,7 @@ const Dashboard = () => {
                   <CardContent sx={{ py: 1 }}>
                     <Grid container alignItems="center" key={`${summary._id?._id}-container`}>
                       <Grid item xs={6} md={4} key={`${summary._id?._id}-info`}>
-                        <Typography variant="subtitle1">{summary._id?.name || 'Unknown Student'}</Typography>
+                        <Typography variant="subtitle1">{summary._id?.name || summary._id?.recordedName || 'Unknown Student'}</Typography>
                         <Typography variant="body2" color="textSecondary">
                           Last payment: {new Date(summary.lastPaymentDate).toLocaleDateString()}
                         </Typography>

@@ -101,7 +101,7 @@ router.get('/student-summaries', async (req, res) => {
     const studentSummaries = await Payment.aggregate([
       {
         $group: {
-          _id: '$student',
+          _id: '$studentId',
           totalPaid: { $sum: '$amount' },
           paymentCount: { $sum: 1 },
           lastPaymentDate: { $max: '$paymentDate' }

@@ -537,7 +537,7 @@ const Payments = () => {
                   value={formData.amount}
                   onChange={handleInputChange}
                   required
-                  inputProps={{ min: 0, step: 0.01 }}
+                  inputProps={{ min: 0, step: 10.00 }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

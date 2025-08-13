@@ -172,8 +172,8 @@ const Reports = () => {
       {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
       <Paper sx={{ p: 3, mb: 4 }}>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12} sm={4}>
+        <Grid container spacing={3} alignItems="center" key="report-controls">
+          <Grid item xs={12} sm={4} key="month-selector">
             <FormControl fullWidth>
               <InputLabel id="month-select-label">Month</InputLabel>
               <Select
@@ -188,7 +188,7 @@ const Reports = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} key="year-selector">
             <FormControl fullWidth>
               <InputLabel id="year-select-label">Year</InputLabel>
               <Select
@@ -203,7 +203,7 @@ const Reports = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} key="action-buttons">
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
 
               <Button
@@ -252,22 +252,22 @@ const Reports = () => {
             </Typography>
           </Box>
 
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} md={6}>
+          <Grid container spacing={3} sx={{ mb: 4 }} key="monthly-report-summary">
+            <Grid item xs={12} md={6} key="summary-card">
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>Summary</Typography>
                   <Divider sx={{ mb: 2 }} />
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                  <Grid container spacing={2} key="summary-grid">
+                    <Grid item xs={6} key="total-amount">
                       <Typography variant="body2" color="textSecondary">Total Amount</Typography>
                       <Typography variant="h6">RM {monthlyReport.totalAmount.toFixed(2)}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} key="payment-count">
                       <Typography variant="body2" color="textSecondary">Number of Payments</Typography>
                       <Typography variant="h6">{monthlyReport.paymentCount}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} key="average-payment">
                       <Typography variant="body2" color="textSecondary">Average Payment</Typography>
                       <Typography variant="h6">
                         RM {monthlyReport.paymentCount > 0 
@@ -275,7 +275,7 @@ const Reports = () => {
                           : '0.00'}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} key="payment-methods-count">
                       <Typography variant="body2" color="textSecondary">Payment Methods</Typography>
                       <Typography variant="h6">{monthlyReport.paymentMethodSummary.length}</Typography>
                     </Grid>
@@ -283,7 +283,7 @@ const Reports = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} key="payment-methods-chart">
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>Payment Methods</Typography>
@@ -320,7 +320,7 @@ const Reports = () => {
                     monthlyReport.payments.map((payment) => (
                       <TableRow key={payment._id}>
                         <TableCell>{formatDate(payment.paymentDate)}</TableCell>
-                        <TableCell>{payment.student?.name || 'Unknown Student'}</TableCell>
+                        <TableCell>{payment.studentId?.name || payment.studentId?.recordedName || 'Unknown Student'}</TableCell>
                         <TableCell>{payment.amount.toFixed(2)}</TableCell>
                         <TableCell>{payment.paymentMethod}</TableCell>
                         <TableCell>{payment.receiptNumber || '-'}</TableCell>
