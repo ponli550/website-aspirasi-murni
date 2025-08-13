@@ -56,14 +56,31 @@ router.get('/export/einvoice/pdf', async (req, res) => {
       return res.status(400).json({ message: 'Month and year are required for PDF export' });
     }
     
+    // Convert month name to number if needed
+    const monthNames = {
+      'January': 1, 'February': 2, 'March': 3, 'April': 4,
+      'May': 5, 'June': 6, 'July': 7, 'August': 8,
+      'September': 9, 'October': 10, 'November': 11, 'December': 12
+    };
+    
+    let monthNumber = month;
+    if (isNaN(month)) {
+      monthNumber = monthNames[month];
+      if (!monthNumber) {
+        return res.status(400).json({ message: 'Invalid month name provided' });
+      }
+    } else {
+      monthNumber = parseInt(month);
+    }
+    
     // Build query based on filters
     let query = {};
-    if (month && year) {
-      query.month = month;
+    if (monthNumber && year) {
+      query.month = monthNumber;
       query.year = parseInt(year);
     }
     if (studentId) {
-      query.student = studentId;
+      query.studentId = studentId;
     }
     
     const payments = await Payment.find(query)
@@ -136,7 +153,7 @@ router.get('/export/einvoice/pdf', async (req, res) => {
     let totalAmount = 0;
     payments.forEach((payment) => {
       const invoiceNumber = `INV-${payment._id.toString().slice(-8).toUpperCase()}`;
-      const buyerName = payment.student.name || payment.student.recordedName || 'N/A';
+      const buyerName = payment.studentId.name || payment.studentId.recordedName || 'N/A';
       const serviceDescription = `Tuition fees for ${payment.month} ${payment.year}`;
       totalAmount += payment.amount;
       
@@ -315,173 +332,7 @@ router.get('/export/einvoice/:format', async (req, res) => {
   }
 });
 
-// Export e-invoice as PDF
-router.get('/export/einvoice/pdf', async (req, res) => {
-  console.log('PDF route reached!');
-  try {
-    const { month, year, studentId } = req.query;
-    console.log('PDF Export Request:', { month, year, studentId });
-    
-    // Validate required parameters
-    if (!month || !year) {
-      console.log('Validation failed: Missing month or year');
-      return res.status(400).json({ message: 'Month and year are required for PDF export' });
-    }
-    
-    // Build query based on filters
-    let query = {};
-    if (month && year) {
-      query.month = month;
-      query.year = parseInt(year);
-    }
-    if (studentId) {
-      query.student = studentId;
-    }
-    
-    const payments = await Payment.find(query)
-      .populate('student', 'name recordedName contactNumber email')
-      .sort({ paymentDate: -1 });
-    
-    // Company information
-    const companyInfo = {
-      name: 'Pusat Tuisyen Aspirasi Murni',
-      registrationNumber: '202403330624 (003678967-P)',
-      email: 'puterizamrud@gmail.com',
-      address: 'NO 56-1, JALAN SERI IMPIAN 8/1B,BANDAR SERI IMPIAN,86000 KLUANG,JOHOR',
-      currency: 'RM'
-    };
-    
-    // Generate HTML content for PDF
-    let htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>E-Invoice Report</title>
-      <style>
-        body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 20px; }
-        .company-info { margin-bottom: 30px; background: #f8f9fa; padding: 15px; border-radius: 5px; }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .invoice-table th { background-color: #007bff; color: white; }
-        .invoice-table tr:nth-child(even) { background-color: #f2f2f2; }
-        .total-row { font-weight: bold; background-color: #e9ecef !important; }
-        .page-break { page-break-before: always; }
-        h1 { color: #007bff; margin: 0; }
-        h2 { color: #495057; border-bottom: 1px solid #dee2e6; padding-bottom: 10px; }
-        .info-row { margin: 5px 0; }
-        .label { font-weight: bold; display: inline-block; width: 200px; }
-      </style>
-    </head>
-    <body>
-      <div class="header">
-        <h1>E-INVOICE REPORT</h1>
-        <p>Generated on ${new Date().toLocaleDateString('en-MY')}</p>
-      </div>
-      
-      <div class="company-info">
-        <h2>Company Information</h2>
-        <div class="info-row"><span class="label">Nama Pusat Tuisyen:</span> ${companyInfo.name}</div>
-        <div class="info-row"><span class="label">Nombor Pendaftaran:</span> ${companyInfo.registrationNumber}</div>
-        <div class="info-row"><span class="label">Email:</span> ${companyInfo.email}</div>
-        <div class="info-row"><span class="label">Alamat:</span> ${companyInfo.address}</div>
-        <div class="info-row"><span class="label">Kod Mata Wang:</span> ${companyInfo.currency}</div>
-      </div>
-      
-      <h2>Invoice Details</h2>
-      <table class="invoice-table">
-        <thead>
-          <tr>
-            <th>Nombor e-Invois</th>
-            <th>Tarikh e-Invois</th>
-            <th>Nama Pembeli</th>
-            <th>Keterangan Perkhidmatan</th>
-            <th>Harga Unit (${companyInfo.currency})</th>
-            <th>Jenis Cukai</th>
-            <th>Jumlah Cukai (${companyInfo.currency})</th>
-            <th>Jumlah Termasuk Cukai (${companyInfo.currency})</th>
-          </tr>
-        </thead>
-        <tbody>`;
-    
-    let totalAmount = 0;
-    payments.forEach((payment) => {
-      const invoiceNumber = `INV-${payment._id.toString().slice(-8).toUpperCase()}`;
-      const buyerName = payment.student.name || payment.student.recordedName || 'N/A';
-      const serviceDescription = `Tuition fees for ${payment.month} ${payment.year}`;
-      totalAmount += payment.amount;
-      
-      htmlContent += `
-          <tr>
-            <td>${invoiceNumber}</td>
-            <td>${payment.paymentDate.toLocaleDateString('en-MY')}</td>
-            <td>${buyerName}</td>
-            <td>${serviceDescription}</td>
-            <td>${payment.amount.toFixed(2)}</td>
-            <td>Standard Rate</td>
-            <td>0.00</td>
-            <td>${payment.amount.toFixed(2)}</td>
-          </tr>`;
-    });
-    
-    htmlContent += `
-          <tr class="total-row">
-            <td colspan="7"><strong>JUMLAH KESELURUHAN</strong></td>
-            <td><strong>${totalAmount.toFixed(2)}</strong></td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <div style="margin-top: 30px; font-size: 12px; color: #666;">
-        <p><strong>Pengelasan:</strong> Perbelanjaan Am</p>
-        <p><strong>Jenis e-Invois:</strong> Invois</p>
-        <p><strong>Total Invoices:</strong> ${payments.length}</p>
-        <p><strong>Report Generated:</strong> ${new Date().toLocaleString('en-MY')}</p>
-      </div>
-    </body>
-    </html>`;
-    
-    // Generate PDF using Puppeteer
-    let browser;
-    try {
-      browser = await puppeteer.launch({ 
-        headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-      });
-      const page = await browser.newPage();
-      await page.setContent(htmlContent);
-      
-      const pdfBuffer = await page.pdf({
-        format: 'A4',
-        printBackground: true,
-        margin: {
-          top: '20mm',
-          right: '15mm',
-          bottom: '20mm',
-          left: '15mm'
-        }
-      });
-      
-      await browser.close();
-      
-      // Set response headers for PDF download
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="einvoice-report-${Date.now()}.pdf"`);
-      res.send(pdfBuffer);
-      
-    } catch (puppeteerError) {
-       if (browser) {
-         await browser.close();
-       }
-       throw new Error(`PDF generation failed: ${puppeteerError.message}`);
-     }
-    
-  } catch (err) {
-    console.error('Error generating PDF:', err);
-    res.status(500).json({ message: 'Error generating PDF', error: err.message });
-  }
-});
+
 
 // Get a single payment
 router.get('/:id', getPayment, (req, res) => {

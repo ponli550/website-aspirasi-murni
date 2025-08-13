@@ -109,7 +109,7 @@ const Payments = () => {
     if (payment) {
       setCurrentPayment(payment);
       setFormData({
-        student: payment.student._id,
+        student: payment.studentId._id,
         amount: payment.amount,
         paymentMethod: payment.paymentMethod,
         paymentDate: new Date(payment.paymentDate),
@@ -234,7 +234,7 @@ const Payments = () => {
       const filters = {
         month: month,
         year: year,
-        studentId: currentPayment.student._id || currentPayment.student
+        studentId: currentPayment.studentId._id || currentPayment.studentId
       };
       
       await exportEInvoice('pdf', filters);
@@ -453,7 +453,7 @@ const Payments = () => {
                             onChange={() => handleSelectPayment(payment._id)}
                           />
                         </TableCell>
-                        <TableCell>{payment.student?.name || 'Unknown Student'}</TableCell>
+                        <TableCell>{payment.studentId?.name || 'Unknown Student'}</TableCell>
                         <TableCell>{payment.amount.toFixed(2)}</TableCell>
                         <TableCell>{payment.paymentMethod}</TableCell>
                         <TableCell>{formatDate(payment.paymentDate)}</TableCell>

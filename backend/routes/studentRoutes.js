@@ -23,7 +23,18 @@ router.post('/', async (req, res) => {
     name: req.body.name,
     recordedName: req.body.recordedName || req.body.name,
     contactNumber: req.body.contactNumber,
-    email: req.body.email
+    email: req.body.email,
+    phone: req.body.phone,
+    address: req.body.address || {},
+    dateOfBirth: req.body.dateOfBirth,
+    grade: req.body.grade,
+    subjects: req.body.subjects || [],
+    monthlyFee: req.body.monthlyFee,
+    parentName: req.body.parentName,
+    parentPhone: req.body.parentPhone,
+    parentEmail: req.body.parentEmail,
+    status: req.body.status || 'active',
+    notes: req.body.notes || ''
   });
 
   try {

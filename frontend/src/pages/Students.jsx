@@ -34,7 +34,8 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Payments as PaymentsIcon,
-  DeleteSweep as DeleteSweepIcon
+  DeleteSweep as DeleteSweepIcon,
+  Visibility as VisibilityIcon
 } from '@mui/icons-material';
 import { getStudents, createStudent, updateStudent, deleteStudent } from '../services/api';
 import { useNavigate } from 'react-router-dom';
@@ -45,13 +46,29 @@ const Students = () => {
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
   const [currentStudent, setCurrentStudent] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     recordedName: '',
     regionalCode: '+60',
     contactNumber: '',
-    email: ''
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    grade: '',
+    subjects: '',
+    monthlyFee: '',
+    parentName: '',
+    parentPhone: '',
+    parentEmail: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: ''
+    }
   });
 
   const regionalCodes = [
@@ -116,7 +133,22 @@ const Students = () => {
         recordedName: student.recordedName || '',
         regionalCode: regionalCode,
         contactNumber: contactNumber,
-        email: student.email || ''
+        email: student.email || '',
+        phone: student.phone || '',
+        dateOfBirth: student.dateOfBirth ? student.dateOfBirth.split('T')[0] : '',
+        grade: student.grade || '',
+        subjects: Array.isArray(student.subjects) ? student.subjects.join(', ') : student.subjects || '',
+        monthlyFee: student.monthlyFee || '',
+        parentName: student.parentName || '',
+        parentPhone: student.parentPhone || '',
+        parentEmail: student.parentEmail || '',
+        address: {
+          street: student.address?.street || '',
+          city: student.address?.city || '',
+          state: student.address?.state || '',
+          zipCode: student.address?.zipCode || '',
+          country: student.address?.country || ''
+        }
       });
     } else {
       setCurrentStudent(null);
@@ -125,7 +157,22 @@ const Students = () => {
         recordedName: '',
         regionalCode: '+60',
         contactNumber: '',
-        email: ''
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        grade: '',
+        subjects: '',
+        monthlyFee: '',
+        parentName: '',
+        parentPhone: '',
+        parentEmail: '',
+        address: {
+          street: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: ''
+        }
       });
     }
     setOpenDialog(true);
@@ -144,20 +191,45 @@ const Students = () => {
     setOpenDeleteDialog(false);
   };
 
+  const handleOpenViewDialog = (student) => {
+    setCurrentStudent(student);
+    setOpenViewDialog(true);
+  };
+
+  const handleCloseViewDialog = () => {
+    setOpenViewDialog(false);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    
+    // Handle nested address fields
+    if (name.startsWith('address.')) {
+      const addressField = name.split('.')[1];
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          [addressField]: value
+        }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleSubmit = async () => {
     try {
-      // Combine regional code with contact number
+      // Prepare data for backend
       const submitData = {
         ...formData,
-        contactNumber: formData.contactNumber ? `${formData.regionalCode} ${formData.contactNumber}` : ''
+        contactNumber: formData.contactNumber ? `${formData.regionalCode} ${formData.contactNumber}` : '',
+        phone: formData.phone || (formData.contactNumber ? `${formData.regionalCode} ${formData.contactNumber}` : ''),
+        monthlyFee: formData.monthlyFee ? Number(formData.monthlyFee) : 0,
+        subjects: typeof formData.subjects === 'string' ? formData.subjects.split(',').map(s => s.trim()).filter(s => s) : formData.subjects || []
       };
       // Remove regionalCode from submit data as it's not a backend field
       delete submitData.regionalCode;
@@ -365,6 +437,14 @@ const Students = () => {
                         <TableCell>{student.contactNumber || '-'}</TableCell>
                         <TableCell>{student.email || '-'}</TableCell>
                         <TableCell align="right">
+                          <Tooltip title="View Student Info">
+                            <IconButton
+                              color="default"
+                              onClick={() => handleOpenViewDialog(student)}
+                            >
+                              <VisibilityIcon />
+                            </IconButton>
+                          </Tooltip>
                           <Tooltip title="View Payments">
                             <IconButton
                               color="primary"
@@ -491,7 +571,162 @@ const Students = () => {
               variant="outlined"
               value={formData.email}
               onChange={handleInputChange}
+              sx={{ mb: 2 }}
             />
+            <TextField
+              margin="dense"
+              name="dateOfBirth"
+              label="Date of Birth"
+              type="date"
+              fullWidth
+              variant="outlined"
+              value={formData.dateOfBirth}
+              onChange={handleInputChange}
+              required
+              InputLabelProps={{
+                shrink: true,
+              }}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              name="grade"
+              label="Grade"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={formData.grade}
+              onChange={handleInputChange}
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              name="subjects"
+              label="Subjects (comma-separated)"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={formData.subjects}
+              onChange={handleInputChange}
+              placeholder="Math, Science, English"
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              name="monthlyFee"
+              label="Monthly Fee"
+              type="number"
+              fullWidth
+              variant="outlined"
+              value={formData.monthlyFee}
+              onChange={handleInputChange}
+              required
+              InputProps={{
+                startAdornment: <InputAdornment position="start">RM</InputAdornment>,
+              }}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              name="parentName"
+              label="Parent Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={formData.parentName}
+              onChange={handleInputChange}
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              name="parentPhone"
+              label="Parent Phone"
+              type="tel"
+              fullWidth
+              variant="outlined"
+              value={formData.parentPhone}
+              onChange={handleInputChange}
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              name="parentEmail"
+              label="Parent Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={formData.parentEmail}
+              onChange={handleInputChange}
+              sx={{ mb: 2 }}
+            />
+            <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Address</Typography>
+            <TextField
+              margin="dense"
+              name="address.street"
+              label="Street"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={formData.address.street}
+              onChange={handleInputChange}
+              sx={{ mb: 2 }}
+            />
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+              <Grid item xs={6}>
+                <TextField
+                  margin="dense"
+                  name="address.city"
+                  label="City"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  value={formData.address.city}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  margin="dense"
+                  name="address.state"
+                  label="State"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  value={formData.address.state}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  margin="dense"
+                  name="address.zipCode"
+                  label="Zip Code"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  value={formData.address.zipCode}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  margin="dense"
+                  name="address.country"
+                  label="Country"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  value={formData.address.country}
+                  onChange={handleInputChange}
+                  placeholder="Malaysia"
+                />
+              </Grid>
+            </Grid>
           </Box>
         </DialogContent>
         <DialogActions>

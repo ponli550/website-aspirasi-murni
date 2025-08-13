@@ -107,7 +107,7 @@ const Dashboard = () => {
 
       {/* Summary Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3} key="total-students-card">
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -119,7 +119,7 @@ const Dashboard = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3} key="total-payments-card">
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -154,7 +154,7 @@ const Dashboard = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3} key="current-month-card">
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -166,7 +166,7 @@ const Dashboard = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3} key="avg-payment-card">
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -184,8 +184,8 @@ const Dashboard = () => {
       </Grid>
 
       {/* Charts */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+      <Grid container spacing={3} key="charts-container">
+        <Grid item xs={12} md={6} key="payment-methods-chart">
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>Payment Methods</Typography>
             <Box sx={{ height: 300, display: 'flex', justifyContent: 'center' }}>
@@ -200,7 +200,7 @@ const Dashboard = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} key="monthly-payments-chart">
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>Monthly Payments ({summaryData?.currentYear})</Typography>
             <Box sx={{ height: 300 }}>
@@ -235,23 +235,23 @@ const Dashboard = () => {
         <Typography variant="h6" gutterBottom>Student Payment Summary</Typography>
         <Divider sx={{ mb: 2 }} />
         {studentSummaries.length > 0 ? (
-          <Grid container spacing={2}>
+          <Grid container spacing={2} key="student-summaries-container">
             {studentSummaries.slice(0, 5).map((summary) => (
               <Grid item xs={12} key={summary._id?._id}>
                 <Card variant="outlined">
                   <CardContent sx={{ py: 1 }}>
-                    <Grid container alignItems="center">
-                      <Grid item xs={6} md={4}>
+                    <Grid container alignItems="center" key={`${summary._id?._id}-container`}>
+                      <Grid item xs={6} md={4} key={`${summary._id?._id}-info`}>
                         <Typography variant="subtitle1">{summary._id?.name || 'Unknown Student'}</Typography>
                         <Typography variant="body2" color="textSecondary">
                           Last payment: {new Date(summary.lastPaymentDate).toLocaleDateString()}
                         </Typography>
                       </Grid>
-                      <Grid item xs={3} md={4} sx={{ textAlign: 'center' }}>
+                      <Grid item xs={3} md={4} sx={{ textAlign: 'center' }} key={`${summary._id?._id}-count`}>
                         <Typography variant="body2" color="textSecondary">Payments</Typography>
                         <Typography variant="subtitle1">{summary.paymentCount}</Typography>
                       </Grid>
-                      <Grid item xs={3} md={4} sx={{ textAlign: 'right' }}>
+                      <Grid item xs={3} md={4} sx={{ textAlign: 'right' }} key={`${summary._id?._id}-total`}>
                         <Typography variant="body2" color="textSecondary">Total Paid</Typography>
                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                           RM {summary.totalPaid.toFixed(2)}
