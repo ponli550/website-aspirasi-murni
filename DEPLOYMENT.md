@@ -99,20 +99,29 @@ If you want to populate your MongoDB Atlas database with sample data:
 
 ### Common Issues:
 
-1. **MongoDB Connection Error**
+1. **404 NOT_FOUND Error**
+   - Ensure `api/index.js` exists and exports the Express app
+   - Verify `vercel.json` routes are correctly configured
+   - Check that all API routes start with `/api/`
+   - Redeploy after making configuration changes
+
+2. **MongoDB Connection Error**
    - Verify connection string format
    - Check database user credentials
    - Ensure IP whitelist includes 0.0.0.0/0
+   - Test connection string locally first
 
-2. **API Routes Not Working**
+3. **API Routes Not Working**
    - Check Vercel function logs
-   - Verify environment variables are set
+   - Verify environment variables are set in Vercel dashboard
    - Ensure `vercel.json` is properly configured
+   - Check CORS configuration for production domains
 
-3. **Frontend Build Errors**
+4. **Frontend Build Errors**
    - Check build logs in Vercel dashboard
    - Verify all dependencies are in `package.json`
    - Ensure environment variables are set
+   - Clear Vercel build cache and redeploy
 
 ### Vercel Logs
 To view logs:
