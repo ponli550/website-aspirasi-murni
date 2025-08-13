@@ -56,7 +56,7 @@ router.get('/summary', async (req, res) => {
     ]);
 
     // Get monthly payments for the current year
-    const monthlyPayments = await Payment.aggregate([
+    const monthlyPaymentsRaw = await Payment.aggregate([
       {
         $match: {
           year: currentYear
@@ -69,6 +69,17 @@ router.get('/summary', async (req, res) => {
         }
       }
     ]);
+
+    // Convert numeric months to month names
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    const monthlyPayments = monthlyPaymentsRaw.map(item => ({
+      _id: monthNames[item._id - 1], // Convert 1-12 to month names
+      total: item.total
+    }));
 
     res.json({
       totalStudents,
@@ -118,11 +129,29 @@ router.get('/monthly-report/:month/:year', async (req, res) => {
   try {
     const { month, year } = req.params;
     
+    // Convert month name to number if needed
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    let monthNumber;
+    if (isNaN(month)) {
+      // Month is a name, convert to number
+      monthNumber = monthNames.indexOf(month) + 1;
+      if (monthNumber === 0) {
+        return res.status(400).json({ message: 'Invalid month name' });
+      }
+    } else {
+      // Month is already a number
+      monthNumber = parseInt(month);
+    }
+    
     // Get all payments for the specified month and year
     const payments = await Payment.find({
-      month: month,
+      month: monthNumber,
       year: parseInt(year)
-    }).populate('student', 'name recordedName').sort({ paymentDate: 1 });
+    }).populate('studentId', 'name').sort({ paymentDate: 1 });
 
     // Calculate total amount
     const totalAmount = payments.reduce((sum, payment) => sum + payment.amount, 0);
@@ -131,7 +160,7 @@ router.get('/monthly-report/:month/:year', async (req, res) => {
     const paymentMethodSummary = await Payment.aggregate([
       {
         $match: {
-          month: month,
+          month: monthNumber,
           year: parseInt(year)
         }
       },

@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
 router.get('/', async (req, res) => {
   try {
     const payments = await Payment.find()
-      .populate('student', 'name recordedName')
+      .populate('studentId', 'name')
       .sort({ paymentDate: -1 });
     res.json(payments);
   } catch (err) {
@@ -19,8 +19,8 @@ router.get('/', async (req, res) => {
 // Get payments by student ID
 router.get('/student/:studentId', async (req, res) => {
   try {
-    const payments = await Payment.find({ student: req.params.studentId })
-      .populate('student', 'name recordedName')
+    const payments = await Payment.find({ studentId: req.params.studentId })
+      .populate('studentId', 'name')
       .sort({ paymentDate: -1 });
     res.json(payments);
   } catch (err) {
@@ -35,7 +35,7 @@ router.get('/month/:month/year/:year', async (req, res) => {
       month: req.params.month,
       year: parseInt(req.params.year)
     })
-      .populate('student', 'name recordedName')
+      .populate('studentId', 'name')
       .sort({ paymentDate: -1 });
     res.json(payments);
   } catch (err) {
@@ -67,7 +67,7 @@ router.get('/export/einvoice/pdf', async (req, res) => {
     }
     
     const payments = await Payment.find(query)
-      .populate('student', 'name recordedName contactNumber email')
+      .populate('studentId', 'name phone email')
       .sort({ paymentDate: -1 });
     
     // Company information
@@ -228,7 +228,7 @@ router.get('/export/einvoice/:format', async (req, res) => {
     }
     
     const payments = await Payment.find(query)
-      .populate('student', 'name recordedName contactNumber email')
+      .populate('studentId', 'name phone email')
       .sort({ paymentDate: -1 });
     
     // Company information
@@ -502,7 +502,7 @@ router.post('/', async (req, res) => {
     const year = paymentDate.getFullYear();
 
     const payment = new Payment({
-      student: req.body.student,
+      studentId: req.body.studentId,
       amount: req.body.amount,
       paymentMethod: req.body.paymentMethod,
       paymentDate: paymentDate,
@@ -562,7 +562,7 @@ router.delete('/:id', getPayment, async (req, res) => {
 async function getPayment(req, res, next) {
   let payment;
   try {
-    payment = await Payment.findById(req.params.id).populate('student', 'name recordedName');
+    payment = await Payment.findById(req.params.id).populate('studentId', 'name');
     if (payment == null) {
       return res.status(404).json({ message: 'Payment not found' });
     }
