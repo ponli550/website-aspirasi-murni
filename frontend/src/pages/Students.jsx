@@ -737,6 +737,146 @@ const Students = () => {
         </DialogActions>
       </Dialog>
 
+      {/* View Student Info Dialog */}
+      <Dialog open={openViewDialog} onClose={handleCloseViewDialog} maxWidth="md" fullWidth>
+        <DialogTitle>Student Information</DialogTitle>
+        <DialogContent>
+          {currentStudent && (
+            <Box sx={{ pt: 2 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" gutterBottom color="primary">
+                    Personal Information
+                  </Typography>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="text.secondary">Name</Typography>
+                    <Typography variant="body1" fontWeight="medium">{currentStudent.name}</Typography>
+                  </Box>
+                  {currentStudent.recordedName && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Recorded Name</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.recordedName}</Typography>
+                    </Box>
+                  )}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="text.secondary">Contact Number</Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {currentStudent.regionalCode} {currentStudent.contactNumber}
+                    </Typography>
+                  </Box>
+                  {currentStudent.email && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Email</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.email}</Typography>
+                    </Box>
+                  )}
+                  {currentStudent.dateOfBirth && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Date of Birth</Typography>
+                      <Typography variant="body1" fontWeight="medium">
+                        {new Date(currentStudent.dateOfBirth).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  )}
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" gutterBottom color="primary">
+                    Academic Information
+                  </Typography>
+                  {currentStudent.grade && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Grade</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.grade}</Typography>
+                    </Box>
+                  )}
+                  {currentStudent.subjects && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Subjects</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.subjects}</Typography>
+                    </Box>
+                  )}
+                  {currentStudent.monthlyFee && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Monthly Fee</Typography>
+                      <Typography variant="body1" fontWeight="medium">RM {currentStudent.monthlyFee}</Typography>
+                    </Box>
+                  )}
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" gutterBottom color="primary">
+                    Parent Information
+                  </Typography>
+                  {currentStudent.parentName && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Parent Name</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.parentName}</Typography>
+                    </Box>
+                  )}
+                  {currentStudent.parentPhone && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Parent Phone</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.parentPhone}</Typography>
+                    </Box>
+                  )}
+                  {currentStudent.parentEmail && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">Parent Email</Typography>
+                      <Typography variant="body1" fontWeight="medium">{currentStudent.parentEmail}</Typography>
+                    </Box>
+                  )}
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" gutterBottom color="primary">
+                    Address
+                  </Typography>
+                  {currentStudent.address && (
+                    <Box>
+                      {currentStudent.address.street && (
+                        <Box sx={{ mb: 1 }}>
+                          <Typography variant="body1" fontWeight="medium">{currentStudent.address.street}</Typography>
+                        </Box>
+                      )}
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        {currentStudent.address.city && (
+                          <Typography variant="body1">{currentStudent.address.city}</Typography>
+                        )}
+                        {currentStudent.address.state && (
+                          <Typography variant="body1">{currentStudent.address.state}</Typography>
+                        )}
+                        {currentStudent.address.zipCode && (
+                          <Typography variant="body1">{currentStudent.address.zipCode}</Typography>
+                        )}
+                      </Box>
+                      {currentStudent.address.country && (
+                        <Box sx={{ mt: 1 }}>
+                          <Typography variant="body1" fontWeight="medium">{currentStudent.address.country}</Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseViewDialog}>Close</Button>
+          <Button 
+            onClick={() => {
+              handleCloseViewDialog();
+              handleOpenDialog(currentStudent);
+            }} 
+            variant="contained" 
+            color="primary"
+          >
+            Edit Student
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
         <DialogTitle>Confirm Delete</DialogTitle>
