@@ -13,7 +13,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-app.vercel.app', 'https://*.vercel.app']
+    ? true  // Allow all origins in production for Vercel
     : ['http://localhost:5174', 'http://localhost:3000'],
   credentials: true
 }));
