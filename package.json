@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Tuition Centre Aspirasi Murni Fee Payment System",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "": "cd frontend && npm install && npm run build",
     "start": "cd backend && npm start",
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
@@ -20,5 +20,8 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "mongodb": "^6.18.0"
   }
 }

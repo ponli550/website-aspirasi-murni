@@ -27,9 +27,37 @@ app.use('/api/dashboard', dashboardRoutes);
 
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tuition-aspirasi';
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
+
+// Configure MongoDB connection options for serverless environment
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  bufferCommands: false, // Disable mongoose buffering
+  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+};
+
+// Handle MongoDB connection
+let cachedConnection = null;
+
+const connectToDatabase = async () => {
+  if (cachedConnection) {
+    return cachedConnection;
+  }
+  
+  try {
+    const connection = await mongoose.connect(MONGO_URI, mongooseOptions);
+    console.log('MongoDB connected successfully');
+    cachedConnection = connection;
+    return connection;
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    throw err;
+  }
+};
+
+// Connect to MongoDB
+connectToDatabase().catch(console.error);
 
 // Basic route for testing
 app.get('/', (req, res) => {
