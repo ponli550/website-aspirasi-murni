@@ -19,7 +19,7 @@ app.use(express.json());
 // Connect to MongoDB before handling requests
 app.use(async (req, res, next) => {
   // Skip MongoDB connection for test endpoints
-  if (req.path === '/api' || req.path === '/api/simple-test' || req.path === '/api/diagnose' || req.path === '/api/mongo-test') {
+  if (req.path === '/api' || req.path === '/api/simple-test' || req.path === '/api/diagnose' || req.path === '/api/mongo-test' || req.path === '/api/debug-mongo' || req.path === '/api/test-student-route' || req.path === '/api/module-test' || req.path === '/api/direct-mongo-students' || req.path === '/api/direct-mongo-payments' || req.path === '/api/direct-mongo-dashboard') {
     return next();
   }
   

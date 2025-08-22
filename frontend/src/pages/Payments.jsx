@@ -39,9 +39,10 @@ import {
   Print as PrintIcon,
   DeleteSweep as DeleteSweepIcon
 } from '@mui/icons-material';
-import { getPayments, getStudents, createPayment, updatePayment, deletePayment, exportEInvoice } from '../services/api';
+import { useApi } from '../context/ApiContext';
 
 const Payments = () => {
+  const { api } = useApi();
   const [payments, setPayments] = useState([]);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);

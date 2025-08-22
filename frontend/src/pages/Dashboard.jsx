@@ -17,12 +17,13 @@ import {
 } from '@mui/icons-material';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
-import { getDashboardSummary, getStudentSummaries } from '../services/api';
+import { useApi } from '../context/ApiContext';
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 const Dashboard = () => {
+  const { api } = useApi();
   const [loading, setLoading] = useState(true);
   const [summaryData, setSummaryData] = useState(null);
   const [studentSummaries, setStudentSummaries] = useState([]);
@@ -32,8 +33,8 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const summary = await getDashboardSummary();
-        const studentData = await getStudentSummaries();
+        const summary = await api.getDashboardSummary();
+        const studentData = await api.getStudentSummaries();
         setSummaryData(summary);
         setStudentSummaries(studentData);
         setError(null);
@@ -108,7 +109,7 @@ const Dashboard = () => {
       {/* Summary Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }} key="summary-cards-container">
         <Grid item xs={12} sm={6} md={3} key="total-students-card">
-          <Card>
+          <Card sx={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)', border: '1px solid rgba(0, 0, 0, 0.03)' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <PeopleIcon sx={{ color: 'primary.main', mr: 1, fontSize: 40 }} />
@@ -120,7 +121,7 @@ const Dashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3} key="total-payments-card">
-          <Card>
+          <Card sx={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)', border: '1px solid rgba(0, 0, 0, 0.03)' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Box 
@@ -155,7 +156,7 @@ const Dashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3} key="current-month-card">
-          <Card>
+          <Card sx={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)', border: '1px solid rgba(0, 0, 0, 0.03)' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <CalendarIcon sx={{ color: 'info.main', mr: 1, fontSize: 40 }} />
@@ -167,7 +168,7 @@ const Dashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3} key="avg-payment-card">
-          <Card>
+          <Card sx={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)', border: '1px solid rgba(0, 0, 0, 0.03)' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <TrendingUpIcon sx={{ color: 'warning.main', mr: 1, fontSize: 40 }} />
@@ -186,7 +187,7 @@ const Dashboard = () => {
       {/* Charts */}
       <Grid container spacing={3} key="charts-container">
         <Grid item xs={12} md={6} key="payment-methods-chart">
-          <Paper sx={{ p: 2 }}>
+          <Paper sx={{ p: 2, backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)', border: '1px solid rgba(0, 0, 0, 0.03)' }}>
             <Typography variant="h6" gutterBottom>Payment Methods</Typography>
             <Box sx={{ height: 300, display: 'flex', justifyContent: 'center' }}>
               {summaryData?.paymentMethodsDistribution.length > 0 ? (

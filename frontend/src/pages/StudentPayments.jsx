@@ -26,9 +26,10 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon
 } from '@mui/icons-material';
-import { getStudent, getPaymentsByStudent } from '../services/api';
+import { useApi } from '../context/ApiContext';
 
 const StudentPayments = () => {
+  const { api } = useApi();
   const { studentId } = useParams();
   const navigate = useNavigate();
   const [student, setStudent] = useState(null);
@@ -44,8 +45,8 @@ const StudentPayments = () => {
     try {
       setLoading(true);
       const [studentData, paymentsData] = await Promise.all([
-        getStudent(studentId),
-        getPaymentsByStudent(studentId)
+        api.getStudent(studentId),
+        api.getPaymentsByStudent(studentId)
       ]);
       setStudent(studentData);
       setPayments(paymentsData);

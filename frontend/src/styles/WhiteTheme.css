@@ -1,0 +1,57 @@
+/* WhiteTheme.css - Additional styling for a lighter, whiter theme */
+
+/* Global background color */
+body {
+  background-color: #ffffff;
+}
+
+/* Card styling */
+.MuiCard-root {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* Table styling */
+.MuiTableContainer-root {
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.MuiTableHead-root {
+  background-color: #f9f9f9;
+}
+
+.MuiTableRow-root:hover {
+  background-color: #f5f9ff !important;
+}
+
+/* Dialog styling */
+.MuiDialog-paper {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Button styling */
+.MuiButton-contained {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Form controls */
+.MuiOutlinedInput-root {
+  background-color: #ffffff;
+}
+
+/* Dividers */
+.MuiDivider-root {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Typography */
+.MuiTypography-root {
+  color: #333333;
+}
+
+.MuiTypography-colorTextSecondary {
+  color: #757575 !important;
+}

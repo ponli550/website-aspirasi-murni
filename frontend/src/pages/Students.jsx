@@ -37,10 +37,11 @@ import {
   DeleteSweep as DeleteSweepIcon,
   Visibility as VisibilityIcon
 } from '@mui/icons-material';
-import { getStudents, createStudent, updateStudent, deleteStudent } from '../services/api';
+import { useApi } from '../context/ApiContext';
 import { useNavigate } from 'react-router-dom';
 
 const Students = () => {
+  const { api } = useApi();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -102,7 +103,7 @@ const Students = () => {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const data = await getStudents();
+      const data = await api.getStudents();
       setStudents(data);
       setError(null);
     } catch (err) {
@@ -236,7 +237,7 @@ const Students = () => {
       
       if (currentStudent) {
         // Update existing student
-        await updateStudent(currentStudent._id, submitData);
+        await api.updateStudent(currentStudent._id, submitData);
         setSnackbar({
           open: true,
           message: 'Student updated successfully!',
@@ -244,7 +245,7 @@ const Students = () => {
         });
       } else {
         // Create new student
-        await createStudent(submitData);
+        await api.createStudent(submitData);
         setSnackbar({
           open: true,
           message: 'Student added successfully!',
@@ -265,7 +266,7 @@ const Students = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteStudent(currentStudent._id);
+      await api.deleteStudent(currentStudent._id);
       setSnackbar({
         open: true,
         message: 'Student deleted successfully!',
@@ -334,7 +335,7 @@ const Students = () => {
 
   const handleBulkDelete = async () => {
     try {
-      await Promise.all(selectedStudents.map(studentId => deleteStudent(studentId)));
+      await Promise.all(selectedStudents.map(studentId => api.deleteStudent(studentId)));
       setSnackbar({
         open: true,
         message: `${selectedStudents.length} student(s) deleted successfully!`,

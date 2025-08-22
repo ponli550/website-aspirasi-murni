@@ -26,6 +26,30 @@
       "use": "@vercel/node"
     },
     {
+      "src": "api/debug-mongo.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/test-student-route.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/module-test.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/direct-mongo-students.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/direct-mongo-payments.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/direct-mongo-dashboard.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -34,6 +58,66 @@
     }
   ],
   "routes": [
+    {
+      "src": "/api/direct-mongo-dashboard",
+      "dest": "/api/direct-mongo-dashboard.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    {
+      "src": "/api/direct-mongo-payments",
+      "dest": "/api/direct-mongo-payments.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    {
+      "src": "/api/direct-mongo-students",
+      "dest": "/api/direct-mongo-students.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    {
+      "src": "/api/module-test",
+      "dest": "/api/module-test.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    {
+      "src": "/api/test-student-route",
+      "dest": "/api/test-student-route.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    {
+      "src": "/api/debug-mongo",
+      "dest": "/api/debug-mongo.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
     {
       "src": "/api/mongo-test",
       "dest": "/api/mongo-test.js",

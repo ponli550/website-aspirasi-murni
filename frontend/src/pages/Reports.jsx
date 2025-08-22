@@ -28,12 +28,13 @@ import {
 } from '@mui/icons-material';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
-import { getDashboardSummary, getMonthlyReport, exportEInvoice } from '../services/api';
+import { useApi } from '../context/ApiContext';
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 const Reports = () => {
+  const { api } = useApi();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [summaryData, setSummaryData] = useState(null);
@@ -56,7 +57,7 @@ const Reports = () => {
   const fetchSummaryData = async () => {
     try {
       setLoading(true);
-      const summary = await getDashboardSummary();
+      const summary = await api.getDashboardSummary();
       setSummaryData(summary);
 
       // Extract available months and years from the data
@@ -91,7 +92,7 @@ const Reports = () => {
   const fetchMonthlyReport = async (month, year) => {
     try {
       setLoading(true);
-      const report = await getMonthlyReport(month, year);
+      const report = await api.getMonthlyReport(month, year);
       setMonthlyReport(report);
       setError(null);
     } catch (err) {
@@ -126,7 +127,7 @@ const Reports = () => {
         year: selectedYear
       };
       
-      await exportEInvoice(format, filters);
+      await api.exportEInvoice(format, filters);
       setError(null);
     } catch (err) {
       console.error(`Error exporting e-invoice as ${format}:`, err);

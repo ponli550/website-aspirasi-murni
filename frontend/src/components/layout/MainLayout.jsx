@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ApiSelector from '../ApiSelector';
+import { useApi } from '../../context/ApiContext';
 import { Link, useLocation } from 'react-router-dom';
 import {
   AppBar,
@@ -30,6 +32,7 @@ const drawerWidth = 240;
 const MainLayout = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { toggleApiImplementation } = useApi();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -44,11 +47,12 @@ const MainLayout = ({ children }) => {
 
   const drawer = (
     <div>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+      <Toolbar sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.06)' }}>
+        <Typography variant="h6" noWrap component="div" sx={{ color: '#2196f3', fontWeight: 600 }}>
           Aspirasi Murni
         </Typography>
       </Toolbar>
+      {/* API selector hidden as requested */}
       <Divider />
       <List>
         {menuItems.map((item) => (
@@ -57,6 +61,18 @@ const MainLayout = ({ children }) => {
               component={Link}
               to={item.path}
               selected={location.pathname === item.path}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'rgba(33, 150, 243, 0.08)',
+                  color: '#2196f3',
+                  '& .MuiListItemIcon-root': {
+                    color: '#2196f3',
+                  },
+                },
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                },
+              }}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
@@ -75,11 +91,14 @@ const MainLayout = ({ children }) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          backgroundColor: '#ffffff',
+          color: '#333333',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
         }}
       >
         <Toolbar>
           <IconButton
-            color="inherit"
+            color="primary"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
@@ -87,7 +106,7 @@ const MainLayout = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 500 }}>
             Tuition Centre Aspirasi Murni (JZ2C113)
           </Typography>
         </Toolbar>
@@ -98,6 +117,12 @@ const MainLayout = ({ children }) => {
         aria-label="mailbox folders"
       >
         <Drawer
+          PaperProps={{
+            sx: {
+              backgroundColor: '#ffffff',
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.05)',
+            }
+          }}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
@@ -106,7 +131,12 @@ const MainLayout = ({ children }) => {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth,
+              backgroundColor: '#ffffff',
+              borderRight: '1px solid rgba(0, 0, 0, 0.06)'
+            },
           }}
         >
           {drawer}
@@ -115,7 +145,12 @@ const MainLayout = ({ children }) => {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth,
+              backgroundColor: '#ffffff',
+              borderRight: '1px solid rgba(0, 0, 0, 0.06)'
+            },
           }}
           open
         >
@@ -127,7 +162,10 @@ const MainLayout = ({ children }) => {
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
-        <Container maxWidth="lg">{children}</Container>
+        <Container maxWidth="lg">
+          {/* API selector hidden as requested */}
+          {children}
+        </Container>
       </Box>
     </Box>
   );
