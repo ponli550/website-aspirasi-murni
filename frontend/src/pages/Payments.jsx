@@ -228,7 +228,7 @@ const Payments = () => {
 
     try {
       const paymentDate = new Date(currentPayment.paymentDate);
-      const month = paymentDate.toLocaleString('default', { month: 'long' });
+      const month = paymentDate.toLocaleString('en-US', { month: 'long' });
       const year = paymentDate.getFullYear();
       
       const filters = {
@@ -237,7 +237,7 @@ const Payments = () => {
         studentId: currentPayment.student._id || currentPayment.student
       };
       
-      await exportEInvoice('pdf', filters);
+      await exportEInvoice('pdf',filters);
       setSnackbar({
         open: true,
         message: 'Individual payment PDF generated successfully!',
@@ -254,60 +254,66 @@ const Payments = () => {
   };
 
   const handlePrintIndividualPDF = async () => {
-    if (!currentPayment) {
-      setSnackbar({
-        open: true,
-        message: 'Please save the payment first before printing PDF.',
-        severity: 'warning'
-      });
-      return;
+  if (!currentPayment) {
+    setSnackbar({
+      open: true,
+      message: 'Please save the payment first before printing PDF.',
+      severity: 'warning'
+    });
+    return;
+  }
+
+  try {
+    const paymentDate = new Date(currentPayment.paymentDate);
+    const month = paymentDate.toLocaleString('en-US', { month: 'long' });
+    const year = paymentDate.getFullYear();
+
+    const filters = {
+      month: month,
+      year: year,
+      studentId: currentPayment.student._id || currentPayment.student
+    };
+    // ✅ Build query string manually
+    const queryParams = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) queryParams.append(key, filters[key]);
+    });
+
+    const url = `/api/payments/export/einvoice/pdf?${queryParams.toString()}`;
+
+
+    // ✅ Call API directly to get Blob
+    const response = await api.get(url, {
+      responseType: 'blob'
+    });
+
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const objectUrl = window.URL.createObjectURL(blob);
+    const printWindow = window.open(objectUrl, '_blank');
+
+    if (!printWindow) {
+      throw new Error('Popup blocked. Please allow popups for this site.');
     }
 
-    try {
-      const paymentDate = new Date(currentPayment.paymentDate);
-      const month = paymentDate.toLocaleString('default', { month: 'long' });
-      const year = paymentDate.getFullYear();
-      
-      const filters = {
-        month: month,
-        year: year,
-        studentId: currentPayment.student._id || currentPayment.student
-      };
-      
-      // Use the existing API service but modify for printing
-      const params = new URLSearchParams();
-      if (filters.month) params.append('month', filters.month);
-      if (filters.year) params.append('year', filters.year);
-      if (filters.studentId) params.append('studentId', filters.studentId);
-      
-      // Use the existing API service for consistency
-      const blob = await exportEInvoice(filters);
-      
-      // Create object URL and open in new window for printing
-      const url = window.URL.createObjectURL(blob);
-      const printWindow = window.open(url, '_blank');
-      
-      if (printWindow) {
-        printWindow.onload = () => {
-          printWindow.print();
-        };
-      }
-      
-      setSnackbar({
-        open: true,
-        message: 'PDF opened for printing!',
-        severity: 'success'
-      });
-    } catch (err) {
-      console.error('Error printing individual PDF:', err);
-      setSnackbar({
-        open: true,
-        message: 'Error printing individual PDF. Please try again.',
-        severity: 'error'
-      });
-    }
-  };
+    printWindow.onload = () => {
+      printWindow.print();
+      setTimeout(() => window.URL.revokeObjectURL(objectUrl), 10000);
+    };
 
+    setSnackbar({
+      open: true,
+      message: 'PDF opened for printing!',
+      severity: 'success'
+    });
+  } catch (err) {
+    console.error('Error printing individual PDF:', err);
+    setSnackbar({
+      open: true,
+      message: err.message || 'Error printing individual PDF. Please try again.',
+      severity: 'error'
+    });
+  }
+};
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     setSelectedPayments([]); // Clear selections when changing pages

@@ -1,13 +1,12 @@
 import axios from 'axios';
 
 // Updated to use your deployed backend URL + /api endpoint
-const API_URL = 'https://website-aspirasi-murni-2f7yllsue-ponli550s-projects.vercel.app/';
-
+const API_URL = 'https://website-aspirasi-murni-relrgpjvj-ponli550s-projects.vercel.app';
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-  },
+  }
 });
 
 // Student API calls
