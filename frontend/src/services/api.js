@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api';
+// Updated to use your deployed backend URL + /api endpoint
+const API_URL = 'https://website-aspirasi-murni-2f7yllsue-ponli550s-projects.vercel.app/';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -12,7 +13,7 @@ const api = axios.create({
 // Student API calls
 export const getStudents = async () => {
   try {
-    const response = await api.get('/students');
+    const response = await api.get('/api/students');
     return response.data;
   } catch (error) {
     console.error('Error fetching students:', error);
@@ -22,7 +23,7 @@ export const getStudents = async () => {
 
 export const getStudent = async (id) => {
   try {
-    const response = await api.get(`/students/${id}`);
+    const response = await api.get(`/api/students/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching student ${id}:`, error);
@@ -32,7 +33,7 @@ export const getStudent = async (id) => {
 
 export const createStudent = async (studentData) => {
   try {
-    const response = await api.post('/students', studentData);
+    const response = await api.post('/api/students', studentData);
     return response.data;
   } catch (error) {
     console.error('Error creating student:', error);
@@ -42,7 +43,7 @@ export const createStudent = async (studentData) => {
 
 export const updateStudent = async (id, studentData) => {
   try {
-    const response = await api.patch(`/students/${id}`, studentData);
+    const response = await api.patch(`/api/students/${id}`, studentData);
     return response.data;
   } catch (error) {
     console.error(`Error updating student ${id}:`, error);
@@ -52,7 +53,7 @@ export const updateStudent = async (id, studentData) => {
 
 export const deleteStudent = async (id) => {
   try {
-    const response = await api.delete(`/students/${id}`);
+    const response = await api.delete(`/api/students/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting student ${id}:`, error);
@@ -63,7 +64,7 @@ export const deleteStudent = async (id) => {
 // Payment API calls
 export const getPayments = async () => {
   try {
-    const response = await api.get('/payments');
+    const response = await api.get('/api/payments');
     return response.data;
   } catch (error) {
     console.error('Error fetching payments:', error);
@@ -73,7 +74,7 @@ export const getPayments = async () => {
 
 export const getPaymentsByStudent = async (studentId) => {
   try {
-    const response = await api.get(`/payments/student/${studentId}`);
+    const response = await api.get(`/api/payments/student/${studentId}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching payments for student ${studentId}:`, error);
@@ -83,7 +84,7 @@ export const getPaymentsByStudent = async (studentId) => {
 
 export const getPaymentsByMonth = async (month, year) => {
   try {
-    const response = await api.get(`/payments/month/${month}/year/${year}`);
+    const response = await api.get(`/api/payments/month/${month}/year/${year}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching payments for ${month} ${year}:`, error);
@@ -93,7 +94,7 @@ export const getPaymentsByMonth = async (month, year) => {
 
 export const getPayment = async (id) => {
   try {
-    const response = await api.get(`/payments/${id}`);
+    const response = await api.get(`/api/payments/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching payment ${id}:`, error);
@@ -103,7 +104,7 @@ export const getPayment = async (id) => {
 
 export const createPayment = async (paymentData) => {
   try {
-    const response = await api.post('/payments', paymentData);
+    const response = await api.post('/api/payments', paymentData);
     return response.data;
   } catch (error) {
     console.error('Error creating payment:', error);
@@ -113,7 +114,7 @@ export const createPayment = async (paymentData) => {
 
 export const updatePayment = async (id, paymentData) => {
   try {
-    const response = await api.patch(`/payments/${id}`, paymentData);
+    const response = await api.patch(`/api/payments/${id}`, paymentData);
     return response.data;
   } catch (error) {
     console.error(`Error updating payment ${id}:`, error);
@@ -123,7 +124,7 @@ export const updatePayment = async (id, paymentData) => {
 
 export const deletePayment = async (id) => {
   try {
-    const response = await api.delete(`/payments/${id}`);
+    const response = await api.delete(`/api/payments/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting payment ${id}:`, error);
@@ -134,7 +135,7 @@ export const deletePayment = async (id) => {
 // Dashboard API calls
 export const getDashboardSummary = async () => {
   try {
-    const response = await api.get('/dashboard/summary');
+    const response = await api.get('/api/dashboard/summary');
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard summary:', error);
@@ -144,7 +145,7 @@ export const getDashboardSummary = async () => {
 
 export const getStudentSummaries = async () => {
   try {
-    const response = await api.get('/dashboard/student-summaries');
+    const response = await api.get('/api/dashboard/student-summaries');
     return response.data;
   } catch (error) {
     console.error('Error fetching student summaries:', error);
@@ -154,7 +155,7 @@ export const getStudentSummaries = async () => {
 
 export const getMonthlyReport = async (month, year) => {
   try {
-    const response = await api.get(`/dashboard/monthly-report/${month}/${year}`);
+    const response = await api.get(`/api/dashboard/monthly-report/${month}/${year}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching monthly report for ${month} ${year}:`, error);
@@ -162,46 +163,45 @@ export const getMonthlyReport = async (month, year) => {
   }
 };
 
-// Export e-invoice
+// E-Invoice export
 export const exportEInvoice = async (format, filters = {}) => {
   try {
-    const params = new URLSearchParams();
-    if (filters.month) params.append('month', filters.month);
-    if (filters.year) params.append('year', filters.year);
-    if (filters.studentId) params.append('studentId', filters.studentId);
+    const queryParams = new URLSearchParams();
     
-    const endpoint = format === 'pdf' 
-      ? `/payments/export/einvoice/pdf?${params.toString()}`
-      : `/payments/export/einvoice/${format}?${params.toString()}`;
+    // Add filters to query parameters
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
     
-    const response = await api.get(endpoint, {
+    const queryString = queryParams.toString();
+    // Update this line to include 'einvoice' in the path
+    const url = `/api/payments/export/einvoice/${format}${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await api.get(url, {
       responseType: 'blob'
     });
     
-    // Create download link
-    const url = window.URL.createObjectURL(new Blob([response.data]));
+    // Create blob link to download
+    const blob = new Blob([response.data]);
+    const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = url;
+    link.href = downloadUrl;
     
-    // Get filename from response headers or create default
-    const contentDisposition = response.headers['content-disposition'];
-    let filename = `einvoice-${Date.now()}.${format}`;
-    if (contentDisposition) {
-      const filenameMatch = contentDisposition.match(/filename="(.+)"/); 
-      if (filenameMatch) {
-        filename = filenameMatch[1];
-      }
-    }
+    // Set filename based on format
+    const timestamp = new Date().toISOString().split('T')[0];
+    link.download = `payments_export_${timestamp}.${format}`;
     
-    link.setAttribute('download', filename);
+    // Trigger download
     document.body.appendChild(link);
     link.click();
     link.remove();
-    window.URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(downloadUrl);
     
-    return { success: true, filename };
+    return { success: true, message: 'Export completed successfully' };
   } catch (error) {
-    console.error(`Error exporting e-invoice as ${format}:`, error);
+    console.error(`Error exporting ${format}:`, error);
     throw error;
   }
 };
